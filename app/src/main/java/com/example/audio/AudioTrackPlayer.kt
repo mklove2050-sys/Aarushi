@@ -18,7 +18,9 @@ import java.nio.ByteOrder
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.sin
 import kotlin.math.sqrt
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class AudioTrackPlayer(
     private val onPlaybackStateChanged: (isPlaying: Boolean) -> Unit,
     private val onAmplitudeChanged: (amplitude: Float) -> Unit,

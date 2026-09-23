@@ -75,34 +75,34 @@ class GeminiLiveWebSocketClient(
             .build()
 
         webSocket = okHttpClient?.newWebSocket(request, object : WebSocketListener() {
-            override fun onOpen(ws: WebSocket, response: Response) {
+            override fun onOpen(webSocket: WebSocket, response: Response) {
                 Log.d(TAG, "Gemini session connected successfully")
                 logAndEmit("Session", "Gemini session connected, sending setup configuration...")
                 isConnected.set(true)
-                sendSetupMessage(ws, activeModel)
+                sendSetupMessage(webSocket, activeModel)
                 listener.onConnected()
             }
 
-            override fun onMessage(ws: WebSocket, text: String) {
-                handleIncomingMessage(ws, text)
+            override fun onMessage(webSocket: WebSocket, text: String) {
+                handleIncomingMessage(webSocket, text)
             }
 
-            override fun onClosing(ws: WebSocket, code: Int, reason: String) {
+            override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
                 Log.d(TAG, "Gemini WebSocket closing: code=$code, reason=$reason")
                 logAndEmit("Session", "Gemini session closing: $reason (code: $code)")
-                ws.close(code, reason)
+                webSocket.close(code, reason)
                 isConnected.set(false)
                 listener.onDisconnected("Closing: $reason")
             }
 
-            override fun onClosed(ws: WebSocket, code: Int, reason: String) {
+            override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                 Log.d(TAG, "Gemini session disconnected: code=$code, reason=$reason")
                 logAndEmit("Session", "Gemini session disconnected: $reason")
                 isConnected.set(false)
                 listener.onDisconnected("Disconnected: $reason")
             }
 
-            override fun onFailure(ws: WebSocket, t: Throwable, response: Response?) {
+            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                 val err = "Gemini session error: ${t.message ?: "Connection failure"}"
                 Log.e(TAG, err, t)
                 logAndEmit("Error", err)
